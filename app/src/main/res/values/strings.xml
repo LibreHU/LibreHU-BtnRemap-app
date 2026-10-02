@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Button remap</string>
+    <string name="notif_channel">Steering wheel buttons</string>
+    <string name="notif_text">Steering wheel buttons are remapped</string>
+    <string name="accessibility_description">Global actions (back, recents, notifications) for the steering wheel buttons and, on a plain Android device, remapping of the hardware keys. Reads key presses only, no screen content.</string>
+    <string name="source">Buttons from: %1$s</string>
+    <string name="owns_keys">Your actions replace the default ones. Unmapped buttons keep their usual function.</string>
+    <string name="shared_keys">The head unit (ivi-services) still runs its own action for each button: map the buttons whose default action does not bother you, or see the README to neutralise MODE.</string>
+    <string name="enable_accessibility">Enable the accessibility service (back, recents…)</string>
+    <string name="last_key">Last button pressed</string>
+    <string name="press_a_key">Press a steering wheel button: it appears here and in the list.</string>
+    <string name="edit">Edit</string>
+    <string name="buttons">Buttons</string>
+    <string name="buttons_hint">Every button pressed at least once. Tap one to choose its actions.</string>
+    <string name="short_press">Short press</string>
+    <string name="long_press">Long press</string>
+    <string name="button">Button</string>
+    <string name="name">Name</string>
+    <string name="save">Save</string>
+    <string name="forget">Forget</string>
+    <string name="choose_action">Action</string>
+    <string name="choose_app">Application</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
+    <string name="cycle_title">"Next source" list</string>
+    <string name="cycle_hint">Apps opened one after the other by the "Next source" action.</string>
+    <string name="action_default">Default</string>
+    <string name="action_nothing">Nothing</string>
+    <string name="action_launch_app">Open an app</string>
+    <string name="action_cycle_apps">Next source (list)</string>
+    <string name="action_home">Home</string>
+    <string name="action_back">Back</string>
+    <string name="action_recents">Recent apps</string>
+    <string name="action_notifications">Notifications</string>
+    <string name="action_play_pause">Play / pause</string>
+    <string name="action_next">Next track</string>
+    <string name="action_previous">Previous track</string>
+    <string name="action_volume_up">Volume +</string>
+    <string name="action_volume_down">Volume −</string>
+    <string name="action_mute">Mute</string>
+    <string name="action_navigation">Navigation</string>
+    <string name="action_voice">Voice assistant</string>
+    <string name="action_phone">Phone</string>
+</resources>
