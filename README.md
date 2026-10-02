@@ -20,6 +20,10 @@ arrivent en trame MCU `20` et passent par l'apprentissage de `com.jancar.steerin
 
 ## Branches
 
+Cette branche : **`librehu-service`** (installer LibreHU-service avant cette app). Les boutons du boîtier non
+réglés gardent leur fonction habituelle (volume, muet, navigation, source, piste, téléphone, accueil).
+
+
 | Branche | Source des boutons | Les actions d'origine… |
 |---|---|---|
 | `main` | touches Android (service d'accessibilité) | sont remplacées pour les boutons réglés |
