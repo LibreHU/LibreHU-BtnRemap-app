@@ -37,7 +37,18 @@ interface HeadUnit {
     ): ActionType? = null
 
     companion object {
-        fun create(context: Context): HeadUnit = AccessibilityKeys
+        fun create(context: Context): HeadUnit = if (isInstalled(context, "com.jancar.services")) IviKeys(context) else AccessibilityKeys
+
+        private fun isInstalled(
+            context: Context,
+            pkg: String,
+        ): Boolean =
+            try {
+                context.packageManager.getPackageInfo(pkg, 0)
+                true
+            } catch (_: Exception) {
+                false
+            }
     }
 }
 

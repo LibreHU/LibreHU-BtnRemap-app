@@ -13,6 +13,7 @@
     <queries>
         <!-- Light / dark theme of LibreHU Launcher. -->
         <provider android:authorities="org.librehu.launcher.theme" />
+        <package android:name="com.jancar.services" />
     </queries>
 
     <application
@@ -32,6 +33,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Harmless target for ivi-services' MODE list (README). -->
+        <activity
+            android:name=".ModeNoOpActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <service
             android:name=".RemapService"

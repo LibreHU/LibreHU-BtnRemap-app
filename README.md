@@ -20,6 +20,9 @@ arrivent en trame MCU `20` et passent par l'apprentissage de `com.jancar.steerin
 
 ## Branches
 
+Cette branche : **`ivi`** (Jancar ivi-services).
+
+
 | Branche | Source des boutons | Les actions d'origine… |
 |---|---|---|
 | `main` | touches Android (service d'accessibilité) | sont remplacées pour les boutons réglés |
@@ -27,10 +30,11 @@ arrivent en trame MCU `20` et passent par l'apprentissage de `com.jancar.steerin
 | `librehu-service` | trames du boîtier CAN Hiworld (`0x11`) et boutons à résistance (MCU `20`) via LibreHU-service | sont remplacées : l'app est seule à recevoir les boutons |
 
 ### Branche `ivi` : neutraliser MODE
-ivi-services lance quand même son appli pour MODE. Avec root, on peut réduire sa liste à une appli inoffensive :
+ivi-services lance quand même une appli de sa liste pour MODE. Avec root, on remplace sa liste par une activité
+vide de cette app (`ModeNoOpActivity`, qui se ferme aussitôt) : seule l'action choisie ici s'exécute.
 ```
 adb root
-adb shell sed -i 's/^COUNT=6/COUNT=1/; s#^APP0=.*#APP0=org.librehu.btnremap/org.librehu.btnremap.MainActivity#' /jancar/config/ivi-settings.ini
+adb shell sed -i 's/^COUNT=6/COUNT=1/; s#^APP0=.*#APP0=org.librehu.btnremap/org.librehu.btnremap.ModeNoOpActivity#' /jancar/config/ivi-settings.ini
 ```
 (sauvegardez le fichier avant ; à refaire si le système le recopie depuis `/system/etc`).
 
