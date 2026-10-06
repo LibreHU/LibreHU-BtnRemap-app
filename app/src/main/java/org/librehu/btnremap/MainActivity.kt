@@ -11,7 +11,21 @@ import org.librehu.btnremap.ui.RemapScreen
 import org.librehu.btnremap.ui.ThemeFollower
 
 class MainActivity : ComponentActivity() {
-    private val theme = lazy { ThemeFollower(this) { dark, _ -> CarColors.palette = CarPalette.of(dark) } }
+    private val theme =
+        lazy {
+            ThemeFollower(this) { dark, accent ->
+                CarColors.palette =
+                    CarPalette.of(
+                        dark,
+                        if (accent != 0) {
+                            androidx.compose.ui.graphics
+                                .Color(accent)
+                        } else {
+                            null
+                        },
+                    )
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
