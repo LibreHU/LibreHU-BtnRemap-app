@@ -3,7 +3,7 @@
 Choisissez vous-même l'action de chaque bouton du volant (ou du boîtier CAN), en **appui court** et **appui long** :
 ouvrir une appli, « source suivante » dans **votre** liste d'applis, lecture / pause, piste suivante / précédente,
 volume, muet, accueil, retour, navigation, assistant vocal, téléphone… Les boutons s'ajoutent tout seuls à la liste
-quand on les appuie (apprentissage), et l'app suit le thème clair / sombre de LibreHU Launcher.
+quand on les appuie (apprentissage), et l'app suit le thème clair / sombre et la couleur d'accent de LibreHU Launcher.
 
 ## Comment fonctionnent les commandes au volant sur l'UJC201 (d'origine)
 
@@ -28,6 +28,11 @@ Cette branche : **`ivi`** (Jancar ivi-services).
 | `main` | touches Android (service d'accessibilité) | sont remplacées pour les boutons réglés |
 | `ivi` | diffusion `com.jancar.services.action.key.event` d'ivi-services | **s'exécutent aussi** (ivi-services n'offre aucun moyen de les bloquer) |
 | `librehu-service` | trames du boîtier CAN Hiworld (`0x11`) et boutons à résistance (MCU `20`) via LibreHU-service | sont remplacées : l'app est seule à recevoir les boutons |
+
+### Branche `librehu-service` : une seule appli pour les touches du volant
+LibreHU-service sait aussi transformer les touches du volant (`0x11`) en actions (onglet CAN, « Touches du volant »,
+actif par défaut sans ivi-services). Avec BtnRemap, désactiver cette option du service, sinon chaque appui
+déclenche deux actions.
 
 ### Branche `ivi` : neutraliser MODE
 ivi-services lance quand même une appli de sa liste pour MODE. Avec root, on remplace sa liste par une activité
