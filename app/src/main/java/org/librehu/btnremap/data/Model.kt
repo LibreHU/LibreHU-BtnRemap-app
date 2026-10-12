@@ -22,6 +22,8 @@ enum class ActionType(
     NOTHING(R.string.action_nothing),
     LAUNCH_APP(R.string.action_launch_app),
     CYCLE_APPS(R.string.action_cycle_apps),
+    SOURCE_NEXT(R.string.action_source_next),
+    SOURCE_PREVIOUS(R.string.action_source_previous),
     HOME(R.string.action_home),
     BACK(R.string.action_back),
     RECENTS(R.string.action_recents),
