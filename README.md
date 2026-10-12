@@ -6,6 +6,14 @@ ouvrir une appli, « source suivante » dans **votre** liste d'applis, **source 
 volume, muet, accueil, retour, navigation, assistant vocal, téléphone… Les boutons s'ajoutent tout seuls à la liste
 quand on les appuie (apprentissage), et l'app suit le thème clair / sombre et la couleur d'accent de LibreHU Launcher.
 
+## Captures d'écran
+
+| | |
+|---|---|
+| ![Commandes au volant](docs/screenshots/main.png)<br>Commandes au volant |  |
+
+Captures sur l'émulateur Android 9 (1280×720, 160 dpi comme l'autoradio), sans autoradio branché : les valeurs du véhicule et de la MCU sont vides. Refaites-les avec l'action **Screenshots** de [LibreHU-OTA-app](https://github.com/LibreHU/LibreHU-OTA-app/tree/main/screenshots).
+
 ## Comment fonctionnent les commandes au volant sur l'UJC201 (d'origine)
 
 ```
