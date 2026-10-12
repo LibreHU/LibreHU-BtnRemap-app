@@ -1,7 +1,8 @@
 # LibreHU BtnRemap — commandes au volant
 
 Choisissez vous-même l'action de chaque bouton du volant (ou du boîtier CAN), en **appui court** et **appui long** :
-ouvrir une appli, « source suivante » dans **votre** liste d'applis, lecture / pause, piste suivante / précédente,
+ouvrir une appli, « source suivante » dans **votre** liste d'applis, **source suivante / précédente de
+[LibreHU EasySource](https://github.com/LibreHU/LibreHU-EasySource-app)** (sélecteur de sources pour la touche MODE / SRC), lecture / pause, piste suivante / précédente,
 volume, muet, accueil, retour, navigation, assistant vocal, téléphone… Les boutons s'ajoutent tout seuls à la liste
 quand on les appuie (apprentissage), et l'app suit le thème clair / sombre et la couleur d'accent de LibreHU Launcher.
 
@@ -44,7 +45,7 @@ adb shell sed -i 's/^COUNT=6/COUNT=1/; s#^APP0=.*#APP0=org.librehu.btnremap/org.
 (sauvegardez le fichier avant ; à refaire si le système le recopie depuis `/system/etc`).
 
 ## Installation
-1. Installer l'APK (artefact de l'Action **Build**), l'ouvrir : le service démarre (notification discrète).
+1. Installer l'APK avec [LibreHU Apps (OTA)](https://github.com/LibreHU/LibreHU-OTA-app), ou l'APK de la release `latest-<branche>` du dépôt (build *release* signé avec la clé commune des applis LibreHU ; les anciens APK de debug avaient chacun leur clé : désinstaller une fois avant), l'ouvrir : le service démarre (notification discrète).
 2. Optionnel : activer le **service d'accessibilité** (Retour, Applis récentes, Notifications ; et sur `main`,
    indispensable pour recevoir les touches).
 3. Appuyer sur chaque bouton du volant, puis le toucher dans la liste pour choisir ses actions.
