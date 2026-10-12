@@ -14,6 +14,8 @@
         <!-- Light / dark theme of LibreHU Launcher. -->
         <provider android:authorities="org.librehu.launcher.theme" />
         <package android:name="com.jancar.services" />
+        <!-- Source picker of LibreHU EasySource (actions "next / previous source"). -->
+        <package android:name="org.librehu.easysource" />
     </queries>
 
     <application

@@ -29,6 +29,8 @@
     <string name="action_nothing">Nothing</string>
     <string name="action_launch_app">Open an app</string>
     <string name="action_cycle_apps">Next source (list)</string>
+    <string name="action_source_next">Next source (EasySource)</string>
+    <string name="action_source_previous">Previous source (EasySource)</string>
     <string name="action_home">Home</string>
     <string name="action_back">Back</string>
     <string name="action_recents">Recent apps</string>
