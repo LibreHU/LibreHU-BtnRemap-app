@@ -13,6 +13,8 @@
     <queries>
         <!-- Light / dark theme of LibreHU Launcher. -->
         <provider android:authorities="org.librehu.launcher.theme" />
+        <!-- Source picker of LibreHU EasySource (actions "next / previous source"). -->
+        <package android:name="org.librehu.easysource" />
     </queries>
 
     <application

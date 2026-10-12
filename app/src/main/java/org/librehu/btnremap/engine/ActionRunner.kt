@@ -37,6 +37,14 @@ class ActionRunner(
                 MappingStore.get(context).nextCycleApp()?.let(::launch)
             }
 
+            ActionType.SOURCE_NEXT -> {
+                easySource(EASYSOURCE_NEXT)
+            }
+
+            ActionType.SOURCE_PREVIOUS -> {
+                easySource(EASYSOURCE_PREVIOUS)
+            }
+
             ActionType.HOME -> {
                 start(Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME))
             }
@@ -98,6 +106,9 @@ class ActionRunner(
         audio.dispatchMediaKeyEvent(KeyEvent(now, now, KeyEvent.ACTION_UP, code, 0))
     }
 
+    /** LibreHU EasySource's source picker: each press shows the next / previous source. */
+    private fun easySource(action: String) = start(Intent(action).setPackage(EASYSOURCE))
+
     private fun global(action: Int) {
         if (RemapAccessibilityService.instance?.performGlobalAction(action) != true) {
             Log.w(TAG, "accessibility service not enabled: global action $action ignored")
@@ -123,5 +134,8 @@ class ActionRunner(
 
     private companion object {
         const val TAG = "LibreHU-BtnRemap"
+        const val EASYSOURCE = "org.librehu.easysource"
+        const val EASYSOURCE_NEXT = "org.librehu.easysource.action.NEXT"
+        const val EASYSOURCE_PREVIOUS = "org.librehu.easysource.action.PREVIOUS"
     }
 }
