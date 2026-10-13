@@ -34,6 +34,7 @@ class RemapService : Service() {
         super.onCreate()
         startForegroundCompat()
         store = MappingStore.get(this)
+        store.publishClaims()
         headUnit = HeadUnit.create(this)
         runner = ActionRunner(this, headUnit)
         _sourceName.value = headUnit.name
