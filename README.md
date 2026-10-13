@@ -40,8 +40,10 @@ Cette branche : **`ivi`** (Jancar ivi-services).
 
 ### Branche `librehu-service` : une seule appli pour les touches du volant
 LibreHU-service sait aussi transformer les touches du volant (`0x11`) en actions (onglet CAN, « Touches du volant »,
-actif par défaut sans ivi-services). Avec BtnRemap, désactiver cette option du service, sinon chaque appui
-déclenche deux actions.
+actif par défaut sans ivi-services). Les deux cohabitent : BtnRemap envoie au service la liste des boutons auxquels
+vous avez donné une action (diffusion `org.librehu.service.CLAIM_KEYS`), et le service ne fait plus rien pour
+ceux-là (une seule action par appui) ; les autres boutons gardent l'action du service. L'onglet CAN du service
+affiche « Géré par LibreHU BtnRemap » sur ces boutons.
 
 ### Branche `ivi` : neutraliser MODE
 ivi-services lance quand même une appli de sa liste pour MODE. Avec root, on remplace sa liste par une activité
