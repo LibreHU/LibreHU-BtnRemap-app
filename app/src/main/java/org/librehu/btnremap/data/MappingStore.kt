@@ -9,7 +9,7 @@ import org.json.JSONArray
 
 /** Buttons, their actions and the app list of the "next source" action, in SharedPreferences. */
 class MappingStore private constructor(
-    context: Context,
+    private val context: Context,
 ) {
     private val prefs = context.getSharedPreferences("mappings", Context.MODE_PRIVATE)
 
@@ -54,7 +54,11 @@ class MappingStore private constructor(
         list.forEach { a.put(it.toJson()) }
         prefs.edit().putString("buttons", a.toString()).apply()
         _buttons.value = list
+        ServiceClaims.publish(context, list)
     }
+
+    /** Sends the handled buttons to LibreHU-service again (start of the app's service). */
+    fun publishClaims() = ServiceClaims.publish(context, _buttons.value)
 
     private fun loadButtons(): List<ButtonMapping> =
         try {

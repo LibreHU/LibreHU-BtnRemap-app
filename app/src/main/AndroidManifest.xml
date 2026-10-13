@@ -5,7 +5,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <!-- LibreHU-service API. Install LibreHU-service first so that this permission is granted. -->
+    <!-- LibreHU-service API (and CLAIM_KEYS: buttons handled here are left to this app). Install LibreHU-service first so
+         that this permission is granted. -->
     <uses-permission android:name="org.librehu.permission.HEADUNIT" />
     <!-- The app picker lists every launchable app. -->
     <uses-permission
@@ -17,6 +18,7 @@
         <provider android:authorities="org.librehu.launcher.theme" />
         <!-- Source picker of LibreHU EasySource (actions "next / previous source"). -->
         <package android:name="org.librehu.easysource" />
+        <package android:name="org.librehu.service" />
     </queries>
 
     <application
