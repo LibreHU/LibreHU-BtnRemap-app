@@ -6,6 +6,14 @@ ouvrir une appli, « source suivante » dans **votre** liste d'applis, **source 
 volume, muet, accueil, retour, navigation, assistant vocal, téléphone… Les boutons s'ajoutent tout seuls à la liste
 quand on les appuie (apprentissage), et l'app suit le thème clair / sombre et la couleur d'accent de LibreHU Launcher.
 
+- **Mode test des touches** (bouton du premier encadré) : écran plein où aucune action ne s'exécute ; chaque
+  événement s'affiche (appuyé / relâché, puis appui court, long ou combinaison, et l'action qu'il donnerait). Toucher une
+  ligne règle le bouton, et l'ajoute à la liste s'il n'y était pas.
+- **Combinaisons** : deux boutons appuyés ensemble (le second pendant que le premier est tenu, ou moins de 650 ms
+  après la dernière impulsion d'un bouton du boîtier CAN). Elles apparaissent dans « Combinaisons détectées » du mode
+  test ; une fois ajoutée et réglée, la combinaison remplace les actions des deux boutons (ni appui long, ni action au
+  relâchement, ni répétition du volume). Ses boutons CAN sont aussi annoncés à LibreHU-service, qui ne fait alors plus
+  rien pour eux.
 - **Action par défaut affichée** : un bouton laissé sur « Défaut » montre entre parenthèses ce que l'autoradio en fait
   (branche `librehu-service` : volume, sourdine, navigation, MODE → applis, précédent / suivant, téléphone, accueil).
 - **Appui long avec le boîtier CAN** : le boîtier Hiworld envoie une touche tenue comme une suite d'appuis de ~100 ms

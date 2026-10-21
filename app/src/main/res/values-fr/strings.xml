@@ -46,4 +46,15 @@
     <string name="action_phone">Téléphone</string>
     <string name="ignore_after_on">Ignorer les touches au démarrage : %1$s</string>
     <string name="ignore_after_on_hint">Après le démarrage ou le réveil de l\'autoradio (contact mis) : sur Clio 3, la commande au volant envoie seule un appui SRC à ce moment, ce qui changeait de source.</string>
+    <string name="test_open">Mode test des touches</string>
+    <string name="test_title">Test des touches</string>
+    <string name="test_hint">Aucune action ne s\'exécute tant que cet écran est ouvert. Appuyez sur les boutons (aussi deux ensemble, et longuement) : chaque appui s\'affiche avec ce qu\'il ferait. Touchez une ligne pour régler le bouton (il est ajouté à la liste s\'il n\'y est pas).</string>
+    <string name="detected_title">Combinaisons détectées</string>
+    <string name="detected_hint">Deux boutons appuyés ensemble. Ajoutez-en une pour lui donner une action : elle remplace alors celles des deux boutons.</string>
+    <string name="test_close">Fermer</string>
+    <string name="test_down">appuyé</string>
+    <string name="test_up">relâché</string>
+    <string name="test_combo">Combinaison</string>
+    <string name="test_ignored">ignoré (démarrage)</string>
+    <string name="test_not_listed">pas dans la liste</string>
 </resources>

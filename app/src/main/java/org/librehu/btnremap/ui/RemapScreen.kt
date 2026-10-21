@@ -119,6 +119,7 @@ fun RemapScreen() {
     val source by RemapService.sourceName.collectAsStateWithLifecycle()
     val owns by RemapService.ownsKeys.collectAsStateWithLifecycle()
     var editing by remember { mutableStateOf<ButtonMapping?>(null) }
+    var testing by remember { mutableStateOf(false) }
     Row(
         modifier =
             Modifier
@@ -155,6 +156,8 @@ fun RemapScreen() {
                     colors = SliderDefaults.colors(thumbColor = CarColors.Accent, activeTrackColor = CarColors.Accent),
                 )
                 Text(stringResource(R.string.ignore_after_on_hint), color = CarColors.TextDim, fontSize = 13.sp)
+                Spacer(Modifier.height(8.dp))
+                Chip(stringResource(R.string.test_open)) { testing = true }
                 if (RemapAccessibilityService.instance == null) {
                     Spacer(Modifier.height(8.dp))
                     Chip(stringResource(R.string.enable_accessibility)) {
@@ -216,7 +219,7 @@ fun RemapScreen() {
                             color = CarColors.TextDim,
                             fontSize = 14.sp,
                         )
-                        if (!m.short.type.repeats) {
+                        if (!m.short.type.repeats && !m.id.startsWith(MappingStore.COMBO)) {
                             Text(
                                 stringResource(R.string.long_press) + " : " + actionText(m.long, m.id, PressType.LONG),
                                 color = CarColors.TextDim,
@@ -228,6 +231,7 @@ fun RemapScreen() {
             }
         }
     }
+    if (testing) KeyTestDialog(onEdit = { editing = it }, onDismiss = { testing = false })
     editing?.let { m -> ButtonEditor(m, onDismiss = { editing = null }) }
 }
 
@@ -252,7 +256,7 @@ private fun ButtonEditor(
                 )
                 Text(m.id, fontSize = 13.sp)
                 Chip(stringResource(R.string.short_press) + " : " + actionText(m.short, m.id)) { picking = true }
-                if (!m.short.type.repeats) {
+                if (!m.short.type.repeats && !m.id.startsWith(MappingStore.COMBO)) {
                     Chip(stringResource(R.string.long_press) + " : " + actionText(m.long, m.id, PressType.LONG)) { picking = false }
                 }
             }

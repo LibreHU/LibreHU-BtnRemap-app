@@ -46,4 +46,15 @@
     <string name="action_phone">Phone</string>
     <string name="ignore_after_on">Ignore buttons at start: %1$s</string>
     <string name="ignore_after_on_hint">After the head unit starts or wakes up (ignition on): on a Clio 3 the steering wheel remote sends a SRC press by itself then, which switched the source.</string>
+    <string name="test_open">Key test mode</string>
+    <string name="test_title">Key test</string>
+    <string name="test_hint">No action runs while this screen is open. Press the buttons (two together too, and long): each press is shown with what it would do. Tap a line to set the button (added to the list if it is not there).</string>
+    <string name="detected_title">Combinations detected</string>
+    <string name="detected_hint">Two buttons pressed together. Add one to give it an action: it then replaces the two buttons\' own.</string>
+    <string name="test_close">Close</string>
+    <string name="test_down">down</string>
+    <string name="test_up">up</string>
+    <string name="test_combo">Combination</string>
+    <string name="test_ignored">ignored (start)</string>
+    <string name="test_not_listed">not in the list</string>
 </resources>
