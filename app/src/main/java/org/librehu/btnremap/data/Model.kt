@@ -19,6 +19,24 @@ data class HuKey(
 
 enum class PressType { SHORT, LONG }
 
+/** One event of the key test: a button down / up, or the press it made (and the action it gives). */
+data class KeyLog(
+    val time: Long,
+    val id: String,
+    val name: String,
+    val kind: Int,
+    val action: ActionType? = null,
+) {
+    companion object {
+        const val DOWN = 0
+        const val UP = 1
+        const val SHORT = 2
+        const val LONG = 3
+        const val COMBO = 4
+        const val IGNORED = 5
+    }
+}
+
 /** What a button press does. [DEFAULT] keeps the head unit's own action (or nothing when we own the keys). */
 enum class ActionType(
     val label: Int,
