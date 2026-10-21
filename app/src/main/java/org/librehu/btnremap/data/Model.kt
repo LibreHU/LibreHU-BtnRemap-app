@@ -10,6 +10,11 @@ data class HuKey(
     /** Default name shown before the user renames the button. */
     val defaultName: String,
     val down: Boolean,
+    /**
+     * The source sends a held button as a train of short presses (the Hiworld CAN box: ~100 ms pressed every
+     * ~380 ms) instead of one long press: [org.librehu.btnremap.engine.PressDetector] joins them.
+     */
+    val pulsed: Boolean = false,
 )
 
 enum class PressType { SHORT, LONG }

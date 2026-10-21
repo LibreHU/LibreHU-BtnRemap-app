@@ -25,6 +25,18 @@ class MappingStore private constructor(
 
     fun get(id: String): ButtonMapping? = _buttons.value.firstOrNull { it.id == id }
 
+    /**
+     * Mapping that applies to [id]: its own, or for a CAN code above 0x1F not set yet, the one of its low 5 bits
+     * (buttons mapped when only D2 & 0x1F was read).
+     */
+    fun mappingFor(id: String): ButtonMapping? {
+        val own = get(id)
+        if (own?.isMapped == true || !id.startsWith("can:")) return own
+        val code = id.removePrefix("can:").toIntOrNull() ?: return own
+        if (code <= 0x1F) return own
+        return get("can:${code and 0x1F}")?.takeIf { it.isMapped }?.copy(id = id) ?: own
+    }
+
     /** Records a key seen for the first time (so it shows up in the app) and publishes it as the last key. */
     fun seen(key: HuKey) {
         if (key.down) _lastKey.value = key

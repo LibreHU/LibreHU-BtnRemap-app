@@ -5,11 +5,15 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
+import android.os.SystemClock
+import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,15 +43,39 @@ class RemapService : Service() {
         runner = ActionRunner(this, headUnit)
         _sourceName.value = headUnit.name
         _ownsKeys.value = headUnit.ownsKeys
+        defaults = headUnit::defaultAction
+        // Ignition on (start, or screen on after standby): some cars send a button press by themselves then (Clio 3)
+        guard()
+        registerReceiver(screenOn, IntentFilter(Intent.ACTION_SCREEN_ON))
         headUnit.start(::onKey)
     }
 
     private fun onKey(key: HuKey) {
         store.seen(key)
-        val m = store.get(key.id) ?: return
+        if (key.down && SystemClock.elapsedRealtime() < ignoreUntil) {
+            Log.i("LibreHU-BtnRemap", "${key.id} ignored (head unit just started)")
+            return
+        }
+        val m = store.mappingFor(key.id) ?: return
         if (!handles(m)) return
-        if (key.down) detector.down(m) else detector.up(m)
+        if (key.down) detector.down(m, key.pulsed) else detector.up(m, key.pulsed)
     }
+
+    /** Until when the buttons are ignored (elapsedRealtime), after the start and when the screen comes on. */
+    private var ignoreUntil = 0L
+
+    private fun guard() {
+        val s = ignoreAfterOnS(this)
+        ignoreUntil = if (s > 0) SystemClock.elapsedRealtime() + s * 1000L else 0L
+    }
+
+    private val screenOn =
+        object : BroadcastReceiver() {
+            override fun onReceive(
+                context: Context,
+                intent: Intent,
+            ) = guard()
+        }
 
     /** A button is handled when mapped, or when we own the keys and it has a default action. */
     private fun handles(m: ButtonMapping): Boolean =
@@ -78,6 +106,7 @@ class RemapService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onDestroy() {
+        runCatching { unregisterReceiver(screenOn) }
         headUnit.stop()
         super.onDestroy()
     }
@@ -107,6 +136,22 @@ class RemapService : Service() {
         private val _ownsKeys = MutableStateFlow(true)
         val sourceName: StateFlow<String> = _sourceName.asStateFlow()
         val ownsKeys: StateFlow<Boolean> = _ownsKeys.asStateFlow()
+
+        /** What an unmapped button does (the head unit's default action), for the screen. */
+        @Volatile
+        var defaults: (String, PressType) -> ActionType? = { _, _ -> null }
+
+        private const val PREF_IGNORE = "ignore_after_on_s"
+        const val IGNORE_DEFAULT_S = 5
+
+        /** Seconds the buttons are ignored after the head unit starts or wakes (ignition on). */
+        fun ignoreAfterOnS(context: Context): Int =
+            context.getSharedPreferences("mappings", Context.MODE_PRIVATE).getInt(PREF_IGNORE, IGNORE_DEFAULT_S)
+
+        fun setIgnoreAfterOnS(
+            context: Context,
+            s: Int,
+        ) = context.getSharedPreferences("mappings", Context.MODE_PRIVATE).edit().putInt(PREF_IGNORE, s).apply()
 
         fun start(context: Context) {
             try {

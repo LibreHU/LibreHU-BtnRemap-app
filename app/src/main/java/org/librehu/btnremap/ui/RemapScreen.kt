@@ -55,6 +55,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.librehu.btnremap.R
 import org.librehu.btnremap.RemapAccessibilityService
 import org.librehu.btnremap.RemapService
+import org.librehu.btnremap.data.PressType
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.runtime.mutableIntStateOf
+import kotlin.math.roundToInt
 import org.librehu.btnremap.data.Action
 import org.librehu.btnremap.data.ActionType
 import org.librehu.btnremap.data.ButtonMapping
@@ -91,9 +96,17 @@ private fun appLabel(
     } ?: "?"
 
 @Composable
-private fun actionText(a: Action): String {
+private fun actionText(
+    a: Action,
+    id: String? = null,
+    press: PressType = PressType.SHORT,
+): String {
     val context = LocalContext.current
     val base = stringResource(a.type.label)
+    if (a.type == ActionType.DEFAULT && id != null) {
+        // What the head unit does with it when left as is
+        RemapService.defaults(id, press)?.let { return "$base (${stringResource(it.label)})" }
+    }
     return if (a.type == ActionType.LAUNCH_APP) "$base : ${appLabel(context, a.component)}" else base
 }
 
@@ -126,6 +139,22 @@ fun RemapScreen() {
                 Text(stringResource(R.string.source, source), color = CarColors.TextDim, fontSize = 15.sp)
                 Spacer(Modifier.height(8.dp))
                 Text(stringResource(if (owns) R.string.owns_keys else R.string.shared_keys), color = CarColors.TextDim, fontSize = 14.sp)
+                Spacer(Modifier.height(8.dp))
+                var ignore by remember { mutableIntStateOf(RemapService.ignoreAfterOnS(context)) }
+                Text(
+                    stringResource(R.string.ignore_after_on, if (ignore == 0) "—" else "$ignore s"),
+                    color = CarColors.Text,
+                    fontSize = 16.sp,
+                )
+                Slider(
+                    value = ignore.toFloat(),
+                    onValueChange = { ignore = it.roundToInt() },
+                    onValueChangeFinished = { RemapService.setIgnoreAfterOnS(context, ignore) },
+                    valueRange = 0f..15f,
+                    steps = 14,
+                    colors = SliderDefaults.colors(thumbColor = CarColors.Accent, activeTrackColor = CarColors.Accent),
+                )
+                Text(stringResource(R.string.ignore_after_on_hint), color = CarColors.TextDim, fontSize = 13.sp)
                 if (RemapAccessibilityService.instance == null) {
                     Spacer(Modifier.height(8.dp))
                     Chip(stringResource(R.string.enable_accessibility)) {
@@ -183,13 +212,13 @@ fun RemapScreen() {
                     ) {
                         Text(m.name, color = CarColors.Text, fontSize = 18.sp, fontWeight = FontWeight.Medium)
                         Text(
-                            stringResource(R.string.short_press) + " : " + actionText(m.short),
+                            stringResource(R.string.short_press) + " : " + actionText(m.short, m.id),
                             color = CarColors.TextDim,
                             fontSize = 14.sp,
                         )
                         if (!m.short.type.repeats) {
                             Text(
-                                stringResource(R.string.long_press) + " : " + actionText(m.long),
+                                stringResource(R.string.long_press) + " : " + actionText(m.long, m.id, PressType.LONG),
                                 color = CarColors.TextDim,
                                 fontSize = 14.sp,
                             )
@@ -222,8 +251,10 @@ private fun ButtonEditor(
                     label = { Text(stringResource(R.string.name)) },
                 )
                 Text(m.id, fontSize = 13.sp)
-                Chip(stringResource(R.string.short_press) + " : " + actionText(m.short)) { picking = true }
-                if (!m.short.type.repeats) Chip(stringResource(R.string.long_press) + " : " + actionText(m.long)) { picking = false }
+                Chip(stringResource(R.string.short_press) + " : " + actionText(m.short, m.id)) { picking = true }
+                if (!m.short.type.repeats) {
+                    Chip(stringResource(R.string.long_press) + " : " + actionText(m.long, m.id, PressType.LONG)) { picking = false }
+                }
             }
         },
         confirmButton = {

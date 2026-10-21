@@ -6,6 +6,14 @@ ouvrir une appli, « source suivante » dans **votre** liste d'applis, **source 
 volume, muet, accueil, retour, navigation, assistant vocal, téléphone… Les boutons s'ajoutent tout seuls à la liste
 quand on les appuie (apprentissage), et l'app suit le thème clair / sombre et la couleur d'accent de LibreHU Launcher.
 
+- **Action par défaut affichée** : un bouton laissé sur « Défaut » montre entre parenthèses ce que l'autoradio en fait
+  (branche `librehu-service` : volume, sourdine, navigation, MODE → applis, précédent / suivant, téléphone, accueil).
+- **Appui long avec le boîtier CAN** : le boîtier Hiworld envoie une touche tenue comme une suite d'appuis de ~100 ms
+  toutes les ~380 ms ; l'app les réunit (relâché seulement après 650 ms sans nouvel appui), donc l'appui long (0,6 s)
+  marche. Un bouton sans appui long garde un appui court par répétition ; volume : un pas par répétition.
+- **Touches ignorées au démarrage** (5 s par défaut, 0 à 15 s) : après le démarrage du service et quand l'écran se
+  rallume (contact mis). Sur Clio 3, la commande au volant envoie seule un appui SRC à la mise du contact.
+
 ## Captures d'écran
 
 | | |
@@ -34,6 +42,10 @@ arrivent en trame MCU `20` et passent par l'apprentissage de `com.jancar.steerin
 | `main` | touches Android (service d'accessibilité) | sont remplacées pour les boutons réglés |
 | `ivi` | diffusion `com.jancar.services.action.key.event` d'ivi-services | **s'exécutent aussi** (ivi-services n'offre aucun moyen de les bloquer) |
 | `librehu-service` | trames du boîtier CAN Hiworld (`0x11`) et boutons à résistance (MCU `20`) via LibreHU-service | sont remplacées : l'app est seule à recevoir les boutons |
+
+Code des boutons CAN : l'octet 6 **entier** (`can:<code>`). L'appli Hiworld n'en garde que les 5 bits bas, si bien
+que deux boutons ne différant qu'au-dessus de 0x1F (SRC+ / SRC− signalés identiques sur Clio 3) avaient le même
+code. Un code au-dessus de 0x1F encore sans action reprend celle de ses 5 bits bas (réglages d'avant).
 
 ### Branche `librehu-service` : une seule appli pour les touches du volant
 LibreHU-service sait aussi transformer les touches du volant (`0x11`) en actions (onglet CAN, « Touches du volant »,

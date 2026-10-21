@@ -44,4 +44,6 @@
     <string name="action_navigation">Navigation</string>
     <string name="action_voice">Voice assistant</string>
     <string name="action_phone">Phone</string>
+    <string name="ignore_after_on">Ignore buttons at start: %1$s</string>
+    <string name="ignore_after_on_hint">After the head unit starts or wakes up (ignition on): on a Clio 3 the steering wheel remote sends a SRC press by itself then, which switched the source.</string>
 </resources>
