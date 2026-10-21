@@ -16,7 +16,17 @@ object ServiceClaims {
         context: Context,
         buttons: List<ButtonMapping>,
     ) {
-        val keys = ArrayList(buttons.filter { it.isMapped && it.id.startsWith("can:") }.map { it.id })
+        // CAN buttons with an action, and the CAN buttons of a combination with one (the service would act on them too)
+        val keys =
+            ArrayList(
+                (
+                    buttons.filter { it.isMapped && it.id.startsWith("can:") }.map { it.id } +
+                        buttons
+                            .filter { it.isMapped && it.id.startsWith(MappingStore.COMBO) }
+                            .flatMap { it.id.removePrefix(MappingStore.COMBO).split('+') }
+                            .filter { it.startsWith("can:") }
+                ).distinct(),
+            )
         try {
             context.sendBroadcast(
                 Intent(ACTION)

@@ -37,6 +37,31 @@ class MappingStore private constructor(
         return get("can:${code and 0x1F}")?.takeIf { it.isMapped }?.copy(id = id) ?: own
     }
 
+    private val _detected = MutableStateFlow<List<HuKey>>(emptyList())
+
+    /** Combinations pressed that are not in the list yet (offered to be added and set). */
+    val detected: StateFlow<List<HuKey>> = _detected.asStateFlow()
+
+    /** Two buttons held together: offered in [detected] until added. */
+    fun comboSeen(
+        a: ButtonMapping,
+        b: ButtonMapping,
+    ) {
+        val id = comboId(a.id, b.id)
+        if (get(id) != null || _detected.value.any { it.id == id }) return
+        val names = listOf(a, b).sortedBy { it.id }.joinToString(" + ") { it.name }
+        _detected.value = _detected.value + HuKey(id, names, true)
+    }
+
+    /** Adds a detected key or combination to the list (to give it actions). */
+    fun add(key: HuKey): ButtonMapping {
+        get(key.id)?.let { return it }
+        val m = ButtonMapping(key.id, key.defaultName)
+        save(_buttons.value + m)
+        _detected.value = _detected.value.filterNot { it.id == key.id }
+        return m
+    }
+
     /** Records a key seen for the first time (so it shows up in the app) and publishes it as the last key. */
     fun seen(key: HuKey) {
         if (key.down) _lastKey.value = key
@@ -88,6 +113,14 @@ class MappingStore private constructor(
             .orEmpty()
 
     companion object {
+        const val COMBO = "combo:"
+
+        /** Id of the combination of two buttons, whatever the order they were pressed in. */
+        fun comboId(
+            a: String,
+            b: String,
+        ) = COMBO + listOf(a, b).sorted().joinToString("+")
+
         @Volatile
         private var instance: MappingStore? = null
 

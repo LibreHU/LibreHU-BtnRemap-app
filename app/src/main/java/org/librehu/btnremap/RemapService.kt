@@ -21,6 +21,7 @@ import org.librehu.btnremap.data.Action
 import org.librehu.btnremap.data.ActionType
 import org.librehu.btnremap.data.ButtonMapping
 import org.librehu.btnremap.data.HuKey
+import org.librehu.btnremap.data.KeyLog
 import org.librehu.btnremap.data.MappingStore
 import org.librehu.btnremap.data.PressType
 import org.librehu.btnremap.engine.ActionRunner
@@ -32,7 +33,12 @@ class RemapService : Service() {
     private lateinit var store: MappingStore
     private lateinit var headUnit: HeadUnit
     private lateinit var runner: ActionRunner
-    private val detector = PressDetector(::onPress)
+    private val detector =
+        PressDetector(
+            comboFor = { a, b -> store.get(MappingStore.comboId(a, b)) },
+            onCombo = { a, b -> store.comboSeen(a, b) },
+            onPress = ::onPress,
+        )
 
     override fun onCreate() {
         super.onCreate()
@@ -52,12 +58,14 @@ class RemapService : Service() {
 
     private fun onKey(key: HuKey) {
         store.seen(key)
+        log(key.id, if (key.down) KeyLog.DOWN else KeyLog.UP)
         if (key.down && SystemClock.elapsedRealtime() < ignoreUntil) {
             Log.i("LibreHU-BtnRemap", "${key.id} ignored (head unit just started)")
+            log(key.id, KeyLog.IGNORED)
             return
         }
         val m = store.mappingFor(key.id) ?: return
-        if (!handles(m)) return
+        // Every button goes through the detector: one with no action of its own can still be half of a combination
         if (key.down) detector.down(m, key.pulsed) else detector.up(m, key.pulsed)
     }
 
@@ -77,24 +85,30 @@ class RemapService : Service() {
             ) = guard()
         }
 
-    /** A button is handled when mapped, or when we own the keys and it has a default action. */
-    private fun handles(m: ButtonMapping): Boolean =
-        m.isMapped ||
-            (
-                headUnit.ownsKeys &&
-                    (headUnit.defaultAction(m.id, PressType.SHORT) != null || headUnit.defaultAction(m.id, PressType.LONG) != null)
-            )
-
     private fun onPress(
         m: ButtonMapping,
         press: PressType,
     ) {
         val action = m.action(press)
-        if (action.type == ActionType.DEFAULT) {
-            if (headUnit.ownsKeys) headUnit.defaultAction(m.id, press)?.let { runner.run(Action(it)) }
-            return
-        }
-        runner.run(action)
+        val run =
+            if (action.type == ActionType.DEFAULT) {
+                if (headUnit.ownsKeys) headUnit.defaultAction(m.id, press)?.let { Action(it) } else null
+            } else {
+                action
+            }
+        log(m.id, if (press == PressType.LONG) KeyLog.LONG else if (m.id.startsWith(MappingStore.COMBO)) KeyLog.COMBO else KeyLog.SHORT, run?.type)
+        // Key test: what would run, nothing runs
+        if (run == null || _testMode.value) return
+        runner.run(run)
+    }
+
+    private fun log(
+        id: String,
+        kind: Int,
+        action: ActionType? = null,
+    ) {
+        val name = store.get(id)?.name ?: store.lastKey.value?.takeIf { it.id == id }?.defaultName ?: id
+        _events.value = (listOf(KeyLog(SystemClock.elapsedRealtime(), id, name, kind, action)) + _events.value).take(MAX_EVENTS)
     }
 
     override fun onStartCommand(
@@ -136,6 +150,22 @@ class RemapService : Service() {
         private val _ownsKeys = MutableStateFlow(true)
         val sourceName: StateFlow<String> = _sourceName.asStateFlow()
         val ownsKeys: StateFlow<Boolean> = _ownsKeys.asStateFlow()
+
+        private const val MAX_EVENTS = 40
+        private val _events = MutableStateFlow<List<KeyLog>>(emptyList())
+
+        /** Last button events, newest first (key test). */
+        val events: StateFlow<List<KeyLog>> = _events.asStateFlow()
+
+        private val _testMode = MutableStateFlow(false)
+
+        /** Key test: presses are shown with what they would do, and no action runs. Off at each start. */
+        val testMode: StateFlow<Boolean> = _testMode.asStateFlow()
+
+        fun setTestMode(on: Boolean) {
+            _testMode.value = on
+            if (on) _events.value = emptyList()
+        }
 
         /** What an unmapped button does (the head unit's default action), for the screen. */
         @Volatile
