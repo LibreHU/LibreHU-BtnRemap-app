@@ -17,8 +17,9 @@ import org.librehu.service.ILibreHuService
 
 /**
  * LibreHU-service: this app is the only one receiving the buttons, so it owns them.
- * - CAN box (Hiworld): frame 0x11, byte 6 & 0x1F = button, byte 7 = state (0 released, 1/2 pressed,
- *   5 knob step), from the MCU 0x10 data;
+ * - CAN box (Hiworld): frame 0x11, byte 6 = button (whole byte: Hiworld's app keeps only & 0x1F, which made
+ *   two buttons differing above 0x1F the same), byte 7 = state (0 released, 1/2 pressed, 5 knob step), from the MCU
+ *   0x10 data; a held button comes as presses of ~100 ms every ~380 ms ([HuKey.pulsed]);
  * - resistive steering wheel / front panel keys: MCU frame 0x20 (ADC readings, quantised to tell buttons apart).
  */
 class LibreHuKeys(
@@ -104,7 +105,7 @@ class LibreHuKeys(
     }
 
     private fun onCanKey(f: ByteArray) {
-        val code = f[6].toInt() and 0x1F
+        val code = f[6].toInt() and 0xFF
         val state = f[7].toInt() and 0xFF
         when {
             state == STATE_KNOB && code != 0 -> {
@@ -113,14 +114,14 @@ class LibreHuKeys(
 
             code != 0 && state != 0 -> {
                 if (canPressed != code) {
-                    if (canPressed != 0) onKey(HuKey("can:$canPressed", canName(canPressed), false))
+                    if (canPressed != 0) onKey(HuKey("can:$canPressed", canName(canPressed), false, pulsed = true))
                     canPressed = code
-                    onKey(HuKey("can:$code", canName(code), true))
+                    onKey(HuKey("can:$code", canName(code), true, pulsed = true))
                 }
             }
 
             else -> {
-                if (canPressed != 0) onKey(HuKey("can:$canPressed", canName(canPressed), false))
+                if (canPressed != 0) onKey(HuKey("can:$canPressed", canName(canPressed), false, pulsed = true))
                 canPressed = 0
             }
         }
@@ -165,7 +166,8 @@ class LibreHuKeys(
         id: String,
     ) = (if (channel >= 5) "Wheel " else "Panel ") + id.substringAfter("adc:$channel:")
 
-    private fun canName(code: Int) = CAN_NAMES[code] ?: "CAN $code"
+    private fun canName(code: Int) =
+        CAN_NAMES[code] ?: CAN_NAMES[code and 0x1F]?.takeIf { code > 0x1F }?.let { "$it (0x%02X)".format(code) } ?: "CAN $code"
 
     override fun volume(delta: Int): Boolean {
         val s = service ?: return false
@@ -193,7 +195,8 @@ class LibreHuKeys(
         press: PressType,
     ): ActionType? {
         if (press != PressType.SHORT || !id.startsWith("can:")) return null
-        return when (id.removePrefix("can:").toIntOrNull()) {
+        val code = id.removePrefix("can:").toIntOrNull() ?: return null
+        return when (if (code in CAN_NAMES) code else code and 0x1F) {
             1 -> ActionType.VOLUME_UP
             2 -> ActionType.VOLUME_DOWN
             3 -> ActionType.MUTE
