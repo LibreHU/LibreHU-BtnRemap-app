@@ -26,6 +26,7 @@ class ActionRunner(
 
     fun run(action: Action) {
         Log.i(TAG, "action ${action.type} ${action.component ?: ""}")
+        if (action.type in KEY_ACTIONS && headUnit.keyAction(action.type)) return
         when (action.type) {
             ActionType.DEFAULT, ActionType.NOTHING -> {}
 
@@ -137,5 +138,17 @@ class ActionRunner(
         const val EASYSOURCE = "org.librehu.easysource"
         const val EASYSOURCE_NEXT = "org.librehu.easysource.action.NEXT"
         const val EASYSOURCE_PREVIOUS = "org.librehu.easysource.action.PREVIOUS"
+
+        /** Actions the head unit may run itself ([HeadUnit.keyAction]). */
+        val KEY_ACTIONS =
+            setOf(
+                ActionType.MEDIA_PLAY_PAUSE,
+                ActionType.MEDIA_NEXT,
+                ActionType.MEDIA_PREVIOUS,
+                ActionType.VOLUME_UP,
+                ActionType.VOLUME_DOWN,
+                ActionType.MUTE,
+                ActionType.VOICE,
+            )
     }
 }

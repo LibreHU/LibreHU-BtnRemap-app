@@ -30,6 +30,12 @@ interface HeadUnit {
     /** Mute toggle on the head unit; false to fall back to Android. */
     fun toggleMute(): Boolean = false
 
+    /**
+     * Runs a key action ([org.librehu.btnremap.data.ActionType] of media, volume or voice) through the head unit's
+     * own key handling (LibreHU-service: Android Auto, EasySource's picker, sound menu); false to do it here.
+     */
+    fun keyAction(action: ActionType): Boolean = false
+
     /** When we own the keys: what an unmapped button does by default (volume keys keep adjusting the volume…). */
     fun defaultAction(
         id: String,
