@@ -179,6 +179,29 @@ class LibreHuKeys(
         }
     }
 
+    /** Media, volume and voice through LibreHU-service (API 7): Android Auto, EasySource's picker, sound menu. */
+    override fun keyAction(action: ActionType): Boolean {
+        val s = service ?: return false
+        val name =
+            when (action) {
+                ActionType.MEDIA_PLAY_PAUSE -> "PLAY_PAUSE"
+                ActionType.MEDIA_NEXT -> "NEXT"
+                ActionType.MEDIA_PREVIOUS -> "PREVIOUS"
+                ActionType.VOLUME_UP -> "VOLUME_UP"
+                ActionType.VOLUME_DOWN -> "VOLUME_DOWN"
+                ActionType.MUTE -> "MUTE"
+                ActionType.VOICE -> "VOICE_ASSISTANT"
+                else -> return false
+            }
+        return try {
+            if (s.apiVersion < 7) return false
+            s.runKeyAction(name)
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
     override fun toggleMute(): Boolean {
         val s = service ?: return false
         return try {

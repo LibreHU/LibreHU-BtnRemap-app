@@ -55,6 +55,10 @@ réglés gardent leur fonction habituelle (volume, muet, navigation, source, pis
 | `ivi` | diffusion `com.jancar.services.action.key.event` d'ivi-services | **s'exécutent aussi** (ivi-services n'offre aucun moyen de les bloquer) |
 | `librehu-service` | trames du boîtier CAN Hiworld (`0x11`) et boutons à résistance (MCU `20`) via LibreHU-service | sont remplacées : l'app est seule à recevoir les boutons |
 
+Actions média, volume et assistant vocal : passées à LibreHU-service (API 7 `runKeyAction`) quand il est assez récent,
+pour qu'elles fassent comme ses propres touches : vers Android Auto pendant une session, vers le sélecteur
+d'EasySource et le menu son avancé quand ils sont affichés.
+
 Code des boutons CAN : l'octet 6 **entier** (`can:<code>`). L'appli Hiworld n'en garde que les 5 bits bas, si bien
 que deux boutons ne différant qu'au-dessus de 0x1F (SRC+ / SRC− signalés identiques sur Clio 3) avaient le même
 code. Un code au-dessus de 0x1F encore sans action reprend celle de ses 5 bits bas (réglages d'avant).
