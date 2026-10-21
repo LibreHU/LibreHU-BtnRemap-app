@@ -44,4 +44,6 @@
     <string name="action_navigation">Navigation</string>
     <string name="action_voice">Assistant vocal</string>
     <string name="action_phone">Téléphone</string>
+    <string name="ignore_after_on">Ignorer les touches au démarrage : %1$s</string>
+    <string name="ignore_after_on_hint">Après le démarrage ou le réveil de l\'autoradio (contact mis) : sur Clio 3, la commande au volant envoie seule un appui SRC à ce moment, ce qui changeait de source.</string>
 </resources>
