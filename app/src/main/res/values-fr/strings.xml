@@ -57,4 +57,5 @@
     <string name="test_combo">Combinaison</string>
     <string name="test_ignored">ignoré (démarrage)</string>
     <string name="test_not_listed">pas dans la liste</string>
+    <string name="bridge_button_name">Nom</string>
 </resources>
