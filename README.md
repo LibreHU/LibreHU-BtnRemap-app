@@ -26,9 +26,10 @@ quand on les appuie (apprentissage), et l'app suit le thème clair / sombre et l
 
 | | |
 |---|---|
-| ![Commandes au volant](docs/screenshots/main.png)<br>Commandes au volant |  |
+| ![Écran principal](docs/screenshots/main.png)<br>Écran principal | ![Écran principal (2)](docs/screenshots/main-2.png)<br>Écran principal (2) |
+| ![Mode test des touches](docs/screenshots/test.png)<br>Mode test des touches |   |
 
-Captures sur l'émulateur Android 9 (1280×720, 160 dpi comme l'autoradio), sans autoradio branché : les valeurs du véhicule et de la MCU sont vides. Refaites-les avec l'action **Screenshots** de [LibreHU-OTA-app](https://github.com/LibreHU/LibreHU-OTA-app/tree/main/screenshots).
+Captures sur l'émulateur Android 9 (1280×720, 160 dpi comme l'autoradio), sans autoradio branché : les valeurs du véhicule et de la MCU sont vides. Refaites-les avec l'action **Screenshots** de [LibreHU-OTA-app](https://github.com/LibreHU/LibreHU-OTA-app/tree/main/screenshots). Galerie : [librehu.github.io/screenshots/btnremap.html](https://librehu.github.io/screenshots/btnremap.html).
 
 ## Comment fonctionnent les commandes au volant sur l'UJC201 (d'origine)
 
