@@ -11,9 +11,9 @@ import org.librehu.btnremap.ui.RemapScreen
 import org.librehu.btnremap.ui.ThemeFollower
 
 class MainActivity : ComponentActivity() {
-    /** A click on each tap, the sound of LibreHU Launcher's style (see KeyClick). */
+    /** A click on each tap, the sound chosen in LibreHU Launcher (see KeyClick). */
     override fun dispatchTouchEvent(ev: android.view.MotionEvent): Boolean {
-        org.librehu.btnremap.ui.KeyClick.onTouch(this, ev, org.librehu.btnremap.ui.RetroLook.style)
+        org.librehu.btnremap.ui.KeyClick.onTouch(this, ev, org.librehu.btnremap.ui.RetroLook.clickSound)
         return super.dispatchTouchEvent(ev)
     }
 
