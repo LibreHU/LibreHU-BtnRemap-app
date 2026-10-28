@@ -6,6 +6,9 @@ import android.content.Intent
 import android.provider.Settings
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.material.icons.filled.Keyboard
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -120,119 +123,124 @@ fun RemapScreen() {
     val owns by RemapService.ownsKeys.collectAsStateWithLifecycle()
     var editing by remember { mutableStateOf<ButtonMapping?>(null) }
     var testing by remember { mutableStateOf(false) }
-    Row(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .background(CarColors.Background)
-                .safeDrawingPadding()
-                .padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        Column(
-            Modifier
-                .weight(1f)
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+    val body: @Composable (Modifier) -> Unit = { m ->
+        Row(
+            modifier = m,
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Card {
-                Text(stringResource(R.string.app_name), color = CarColors.Text, fontSize = 24.sp, fontWeight = FontWeight.Medium)
-                Text(stringResource(R.string.source, source), color = CarColors.TextDim, fontSize = 15.sp)
-                Spacer(Modifier.height(8.dp))
-                Text(stringResource(if (owns) R.string.owns_keys else R.string.shared_keys), color = CarColors.TextDim, fontSize = 14.sp)
-                Spacer(Modifier.height(8.dp))
-                var ignore by remember { mutableIntStateOf(RemapService.ignoreAfterOnS(context)) }
-                Text(
-                    stringResource(R.string.ignore_after_on, if (ignore == 0) "—" else "$ignore s"),
-                    color = CarColors.Text,
-                    fontSize = 16.sp,
-                )
-                Slider(
-                    value = ignore.toFloat(),
-                    onValueChange = { ignore = it.roundToInt() },
-                    onValueChangeFinished = { RemapService.setIgnoreAfterOnS(context, ignore) },
-                    valueRange = 0f..15f,
-                    steps = 14,
-                    colors = SliderDefaults.colors(thumbColor = CarColors.Accent, activeTrackColor = CarColors.Accent),
-                )
-                Text(stringResource(R.string.ignore_after_on_hint), color = CarColors.TextDim, fontSize = 13.sp)
-                Spacer(Modifier.height(8.dp))
-                Chip(stringResource(R.string.test_open)) { testing = true }
-                if (RemapAccessibilityService.instance == null) {
+            Column(
+                Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Card {
+                    Text(stringResource(R.string.app_name), color = CarColors.Text, fontSize = 24.sp, fontWeight = FontWeight.Medium)
+                    Text(stringResource(R.string.source, source), color = CarColors.TextDim, fontSize = 15.sp)
                     Spacer(Modifier.height(8.dp))
-                    Chip(stringResource(R.string.enable_accessibility)) {
-                        context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                    }
-                }
-            }
-            Card {
-                Text(stringResource(R.string.last_key), color = CarColors.Accent, fontSize = 18.sp, fontWeight = FontWeight.Medium)
-                val k = last
-                if (k == null) {
-                    Text(stringResource(R.string.press_a_key), color = CarColors.TextDim, fontSize = 16.sp)
-                } else {
-                    val m = buttons.firstOrNull { it.id == k.id }
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(16.dp))
-                            .clickable { editing = m }
-                            .padding(vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(painterResource(R.drawable.ic_wheel), null, tint = CarColors.Accent, modifier = Modifier.size(40.dp))
-                        Spacer(Modifier.width(12.dp))
-                        Column(Modifier.weight(1f)) {
-                            Text(m?.name ?: k.defaultName, color = CarColors.Text, fontSize = 20.sp)
-                            Text(k.id, color = CarColors.TextDim, fontSize = 13.sp)
+                    Text(stringResource(if (owns) R.string.owns_keys else R.string.shared_keys), color = CarColors.TextDim, fontSize = 14.sp)
+                    Spacer(Modifier.height(8.dp))
+                    var ignore by remember { mutableIntStateOf(RemapService.ignoreAfterOnS(context)) }
+                    Text(
+                        stringResource(R.string.ignore_after_on, if (ignore == 0) "—" else "$ignore s"),
+                        color = CarColors.Text,
+                        fontSize = 16.sp,
+                    )
+                    Slider(
+                        value = ignore.toFloat(),
+                        onValueChange = { ignore = it.roundToInt() },
+                        onValueChangeFinished = { RemapService.setIgnoreAfterOnS(context, ignore) },
+                        valueRange = 0f..15f,
+                        steps = 14,
+                        colors = SliderDefaults.colors(thumbColor = CarColors.Accent, activeTrackColor = CarColors.Accent),
+                    )
+                    Text(stringResource(R.string.ignore_after_on_hint), color = CarColors.TextDim, fontSize = 13.sp)
+                    Spacer(Modifier.height(8.dp))
+                    Chip(stringResource(R.string.test_open)) { testing = true }
+                    if (RemapAccessibilityService.instance == null) {
+                        Spacer(Modifier.height(8.dp))
+                        Chip(stringResource(R.string.enable_accessibility)) {
+                            context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                         }
-                        Text(stringResource(R.string.edit), color = CarColors.Accent, fontSize = 16.sp)
                     }
                 }
+                Card {
+                    Text(stringResource(R.string.last_key), color = CarColors.Accent, fontSize = 18.sp, fontWeight = FontWeight.Medium)
+                    val k = last
+                    if (k == null) {
+                        Text(stringResource(R.string.press_a_key), color = CarColors.TextDim, fontSize = 16.sp)
+                    } else {
+                        val m = buttons.firstOrNull { it.id == k.id }
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .clip(carShape(16.dp))
+                                .clickable { editing = m }
+                                .padding(vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(painterResource(R.drawable.ic_wheel), null, tint = CarColors.Accent, modifier = Modifier.size(40.dp))
+                            Spacer(Modifier.width(12.dp))
+                            Column(Modifier.weight(1f)) {
+                                Text(m?.name ?: k.defaultName, color = CarColors.Text, fontSize = 20.sp)
+                                Text(k.id, color = CarColors.TextDim, fontSize = 13.sp)
+                            }
+                            Text(stringResource(R.string.edit), color = CarColors.Accent, fontSize = 16.sp)
+                        }
+                    }
+                }
+                CycleCard(Modifier.weight(1f))
             }
-            CycleCard(Modifier.weight(1f))
-        }
-        Column(
-            Modifier
-                .weight(1.2f)
-                .fillMaxHeight()
-                .clip(RoundedCornerShape(28.dp))
-                .background(CarColors.Surface)
-                .padding(20.dp),
-        ) {
-            Text(stringResource(R.string.buttons), color = CarColors.Text, fontSize = 22.sp, fontWeight = FontWeight.Medium)
-            Text(stringResource(R.string.buttons_hint), color = CarColors.TextDim, fontSize = 14.sp)
-            Spacer(Modifier.height(8.dp))
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(buttons, key = { it.id }) { m ->
-                    Column(
-                        Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(if (m.id == last?.id) CarColors.Accent.copy(alpha = 0.18f) else CarColors.SurfaceHigh)
-                            .clickable { editing = m }
-                            .padding(14.dp),
-                    ) {
-                        Text(m.name, color = CarColors.Text, fontSize = 18.sp, fontWeight = FontWeight.Medium)
-                        Text(
-                            stringResource(R.string.short_press) + " : " + actionText(m.short, m.id),
-                            color = CarColors.TextDim,
-                            fontSize = 14.sp,
-                        )
-                        if (!m.short.type.repeats && !m.id.startsWith(MappingStore.COMBO)) {
+            Column(
+                Modifier
+                    .weight(1.2f)
+                    .fillMaxHeight()
+                    .carPanel(28.dp, CarColors.Surface)
+                    .padding(20.dp),
+            ) {
+                Text(stringResource(R.string.buttons), color = CarColors.Text, fontSize = 22.sp, fontWeight = FontWeight.Medium)
+                Text(stringResource(R.string.buttons_hint), color = CarColors.TextDim, fontSize = 14.sp)
+                Spacer(Modifier.height(8.dp))
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(buttons, key = { it.id }) { m ->
+                        Column(
+                            Modifier
+                                .fillMaxWidth()
+                                .clip(carShape(16.dp))
+                                .background(if (m.id == last?.id) CarColors.Accent.copy(alpha = 0.18f) else CarColors.SurfaceHigh)
+                                .clickable { editing = m }
+                                .padding(14.dp),
+                        ) {
+                            Text(m.name, color = CarColors.Text, fontSize = 18.sp, fontWeight = FontWeight.Medium)
                             Text(
-                                stringResource(R.string.long_press) + " : " + actionText(m.long, m.id, PressType.LONG),
+                                stringResource(R.string.short_press) + " : " + actionText(m.short, m.id),
                                 color = CarColors.TextDim,
                                 fontSize = 14.sp,
                             )
+                            if (!m.short.type.repeats && !m.id.startsWith(MappingStore.COMBO)) {
+                                Text(
+                                    stringResource(R.string.long_press) + " : " + actionText(m.long, m.id, PressType.LONG),
+                                    color = CarColors.TextDim,
+                                    fontSize = 14.sp,
+                                )
+                            }
                         }
                     }
                 }
             }
         }
+        if (testing) KeyTestDialog(onEdit = { editing = it }, onDismiss = { testing = false })
+        editing?.let { m -> ButtonEditor(m, onDismiss = { editing = null }) }
     }
-    if (testing) KeyTestDialog(onEdit = { editing = it }, onDismiss = { testing = false })
-    editing?.let { m -> ButtonEditor(m, onDismiss = { editing = null }) }
+    // LibreHU Launcher's car styles: the screen in the style's frame (the launcher asks the app for them).
+    if (carStyled) {
+        StyledFrame(
+            stringResource(R.string.app_name),
+            listOf(StyledAction(stringResource(R.string.test_open), androidx.compose.material.icons.Icons.Default.Keyboard) { testing = true }),
+        ) { body(Modifier.fillMaxSize()) }
+    } else {
+        body(Modifier.fillMaxSize().background(CarColors.Background).safeDrawingPadding().padding(16.dp))
+    }
 }
 
 @Composable
@@ -355,8 +363,7 @@ private fun CycleCard(modifier: Modifier) {
     Column(
         modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(28.dp))
-            .background(CarColors.Surface)
+            .carPanel(28.dp, CarColors.Surface)
             .padding(20.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -399,11 +406,11 @@ private fun CycleCard(modifier: Modifier) {
 @Composable
 private fun Card(content: @Composable () -> Unit) {
     Column(
-        Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(28.dp))
-            .background(CarColors.Surface)
-            .padding(20.dp),
+        when {
+            RetroLook.factory -> Modifier.fillMaxWidth().padding(8.dp)
+            RetroLook.ambient -> Modifier.fillMaxWidth().background(Color.Black.copy(alpha = 0.6f)).border(1.dp, CarColors.Accent).padding(16.dp)
+            else -> Modifier.fillMaxWidth().carPanel(28.dp, CarColors.Surface).padding(20.dp)
+        },
     ) { content() }
 }
 
@@ -412,6 +419,7 @@ private fun Chip(
     label: String,
     onClick: () -> Unit,
 ) {
+    if (carStyled) return StyledPill(label, onClick = onClick)
     Text(
         label,
         color = CarColors.OnAccent,
