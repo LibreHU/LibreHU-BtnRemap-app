@@ -28,6 +28,7 @@ quand on les appuie (apprentissage), et l'app suit le thème clair / sombre et l
 |---|---|
 | ![Écran principal](docs/screenshots/main.png)<br>Écran principal | ![Écran principal (2)](docs/screenshots/main-2.png)<br>Écran principal (2) |
 | ![Mode test des touches](docs/screenshots/test.png)<br>Mode test des touches |   |
+| ![Style Modularer Infotainment-Baukasten](docs/screenshots/style-mib.png)<br>Style Modularer Infotainment-Baukasten | ![Style LHU-Link](docs/screenshots/style-lhu-link.png)<br>Style LHU-Link |
 
 Captures sur l'émulateur Android 9 (1280×720, 160 dpi comme l'autoradio), sans autoradio branché : les valeurs du véhicule et de la MCU sont vides. Refaites-les avec l'action **Screenshots** de [LibreHU-OTA-app](https://github.com/LibreHU/LibreHU-OTA-app/tree/main/screenshots). Galerie : [librehu.github.io/screenshots/btnremap.html](https://librehu.github.io/screenshots/btnremap.html).
 
@@ -96,6 +97,12 @@ une fonction plante avec « class / method not found », regarder `usage.txt` da
 que R8 a retiré) et ajouter une règle `-keep`.
 
 **Styles Modularer Infotainment-Baukasten et LHU-Link de LibreHU Launcher** : c'est le launcher qui les choisit et les demande à l'appli (il publie `style` = `factory` ou `ambient`, comme pour le style rétro) ; l'appli suit tout de suite : palette noire du style même en mode jour, coins carrés partout, police Source Sans 3 pour Modularer Infotainment-Baukasten (SIL OFL 1.1, `third_party/SourceSans3-LICENSE.md`), lettres fines pour LHU-Link. Rien à régler dans l'appli.
+
+L'écran prend aussi la **mise en page** de ces styles (éléments communs dans `ui/CarKit.kt`) : cadre du style
+(**Modularer Infotainment-Baukasten** : Retour encadré, titre sur un trait de la couleur d'accent, touche du bas
+« Mode test des touches », touches encadrées ; **LHU-Link** : titre, panneaux encadrés de la couleur d'accent, barre
+du bas Retour / Mode test des touches / Options), panneaux et lignes carrés. Aucun logo, nom, icône, police ni image
+d'un constructeur.
 
 **Style rétro et police de LibreHU Launcher** : quand le launcher est en style rétro (les couleurs d'un afficheur
 d'autoradio tirées de sa couleur d'accent, couleur RGB comprise), cette appli prend sa palette (jour ou nuit) ; quand
