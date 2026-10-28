@@ -67,8 +67,7 @@ fun KeyTestDialog(
                 Modifier
                     .weight(1.3f)
                     .fillMaxHeight()
-                    .clip(RoundedCornerShape(28.dp))
-                    .background(CarColors.Surface)
+                    .carPanel(28.dp, CarColors.Surface)
                     .padding(20.dp),
             ) {
                 Text(stringResource(R.string.test_title), color = CarColors.Text, fontSize = 22.sp, fontWeight = FontWeight.Medium)
@@ -87,8 +86,7 @@ fun KeyTestDialog(
                 Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .clip(RoundedCornerShape(28.dp))
-                    .background(CarColors.Surface)
+                    .carPanel(28.dp, CarColors.Surface)
                     .padding(20.dp),
             ) {
                 Text(stringResource(R.string.detected_title), color = CarColors.Accent, fontSize = 18.sp, fontWeight = FontWeight.Medium)
@@ -98,8 +96,7 @@ fun KeyTestDialog(
                         Row(
                             Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(CarColors.SurfaceHigh)
+                                .carPanel(16.dp, CarColors.SurfaceHigh)
                                 .clickable { onEdit(store.add(k)) }
                                 .padding(12.dp),
                             verticalAlignment = Alignment.CenterVertically,
@@ -151,7 +148,7 @@ private fun EventRow(
     Row(
         Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
+            .clip(carShape(14.dp))
             .background(if (press) CarColors.Accent.copy(alpha = 0.18f) else CarColors.SurfaceHigh)
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 8.dp),
