@@ -122,6 +122,7 @@ fun RemapScreen() {
     val owns by RemapService.ownsKeys.collectAsStateWithLifecycle()
     var editing by remember { mutableStateOf<ButtonMapping?>(null) }
     var testing by remember { mutableStateOf(false) }
+    var info by remember { mutableStateOf(false) }
     val body: @Composable (Modifier) -> Unit = { m ->
         Row(
             modifier = m,
@@ -156,6 +157,8 @@ fun RemapScreen() {
                     Text(stringResource(R.string.ignore_after_on_hint), color = CarColors.TextDim, fontSize = 13.sp)
                     Spacer(Modifier.height(8.dp))
                     Chip(stringResource(R.string.test_open)) { testing = true }
+                    Spacer(Modifier.height(8.dp))
+                    Chip(stringResource(R.string.info_title)) { info = true }
                     if (RemapAccessibilityService.instance == null) {
                         Spacer(Modifier.height(8.dp))
                         Chip(stringResource(R.string.enable_accessibility)) {
@@ -229,6 +232,7 @@ fun RemapScreen() {
             }
         }
         if (testing) KeyTestDialog(onEdit = { editing = it }, onDismiss = { testing = false })
+        if (info) InfoDialog { info = false }
         editing?.let { m -> ButtonEditor(m, onDismiss = { editing = null }) }
     }
     // LibreHU Launcher's car styles: the screen in the style's frame (the launcher asks the app for them).
